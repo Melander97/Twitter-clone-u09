@@ -1,43 +1,46 @@
 import React from 'react'
 import { useState, useRef } from 'react';
 import { CalendarIcon, ChartBarIcon, EmojiHappyIcon, PhotographIcon, XIcon } from '@heroicons/react/solid';
-import { Picker } from 'emoji-mart'
-import data from '@emoji-mart/data'
-import "emoji-mart/css/emoji-mart.css"; 
+import Picker from 'emoji-picker-react'; 
+import data from '@emoji-mart/data';
+
 
 function Input() {
     const [input, setInput] = useState("");
     const [selectedFile, setSelectedFile] = useState(null);
     const [showEmojis, setShowEmojis] = useState(false)
+    const [loading, setLoading] = useState(false)
     const filePickerRef = useRef(null)
+
+    const sendPost = () => {
+      if (loading) return;
+      setLoading(true);
+    }
   
     const addImageToPost = () => {};
 
+
+    /* const emoji-mart */
     const addEmoji = (e) => {
-        setInput(input + e.native)
-      }
-      const deletePost = async (e) => {
-        e.stopPropagation()
-        try {
-          await deleteDoc(doc(db, 'posts', id))
-          if (post?.image) {
-            const imageRef = ref(storage, `posts/${id}/image`)
-            await deleteObject(imageRef)
-          }
-          router.push('/')
-        } catch (error) {
-          console.log(error)
-        }
-      }
+        let sym = e.unified.split("-");
+        let codesArray = [];
+        sym.forEach((el) => codesArray.push("0x" + el));
+        let emoji = String.fromCodePoint(...codesArray);
+        setInput(input + emoji.native);
+      };
+
+      
 
   return (
-    <div className={`border-b border-gray-700 p-3 flex space-x-3 overflow-y-scroll`}>
+      <div 
+        className={`border-b border-gray-700 p-3 flex space-x-3`}
+      >
         <img src="https://twirpz.files.wordpress.com/2015/06/twitter-avi-gender-balanced-figure.png" 
         alt=""
         className="h-11 w-11 rounded-full cursor-pointer"
          />
          <div className="w-full divide-y divide-gray-700">
-            <div className={``}>
+            <div className={`${selectedFile && "pb-7"} ${input && "space-y-2.5"}`}>
                 <textarea 
                 value={input}
                 onChange={(e) => setInput(e.target.value)} 
@@ -73,7 +76,8 @@ function Input() {
                             type="file"
                             hidden 
                             onChange={addImageToPost} 
-                            ref={filePickerRef}/>
+                            ref={filePickerRef}
+                            />
                         </div>
 
                            <div className="icon rotate-90">
@@ -89,19 +93,24 @@ function Input() {
                             <CalendarIcon className="h-[22px] text-[#1d9bf0]"/>
                            </div>
 
+                     <div className="emojimart">   
                         {showEmojis && (
                             <Picker
-                            onSelect={addEmoji}
-                            style={{
-                                position: "absolute",
-                                marginTop: "465px",
-                                marginLeft: -40,
-                                maxWidth: "320px",
-                                borderRadius: "20px",
-                            }}
-                            theme="dark"/>
+                            data={data}
+                            onEmojiSelect={addEmoji}
+                            theme="dark"
+                            />
                         )}
-                </div> 
+                    </div>  
+                </div>
+                 <button className="bg-[#1d9bf0] text-white rounded-full
+                 px-4 py-1.5 font-bold shadow-md hover:bg-[#1a8cd8]
+                 disabled:hover:bg-[#1d9bf0] disabled:opacity-50
+                 disabled:cursor-default" disabled={!input.trim() && !selectedFile}
+                 /* onClick={sendPost} */
+                 >
+                  Tweet
+                 </button>
             </div>
          </div>
     </div>

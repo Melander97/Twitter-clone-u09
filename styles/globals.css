@@ -23,5 +23,13 @@
   }
 }
 
+.emojimart {
+  position: absolute;
+  margin-top: 485px;
+  margin-left: -40px;
+  max-width: 320px;
+  border-radius:15px;
+}
+
 
 
