@@ -3,6 +3,9 @@ import { useState, useRef } from 'react';
 import { CalendarIcon, ChartBarIcon, EmojiHappyIcon, PhotographIcon, XIcon } from '@heroicons/react/solid';
 import Picker from 'emoji-picker-react'; 
 import data from '@emoji-mart/data';
+import { addDoc, collection, doc, serverTimestamp, updateDoc } from 'firebase/firestore';
+import { db, storage } from "../firebase";
+import { getDownloadURL, ref, uploadString } from "@firebase/storage";
 
 
 function Input() {
@@ -12,12 +15,46 @@ function Input() {
     const [loading, setLoading] = useState(false)
     const filePickerRef = useRef(null)
 
-    const sendPost = () => {
+      // firebase configuration
+    const sendPost = async () => {
       if (loading) return;
       setLoading(true);
-    }
-  
-    const addImageToPost = () => {};
+
+      const docRef = await addDoc(collection(db, 'posts'), {
+        // id: session.user.uid,
+        // username: session.user.name,
+        // userImg: session.user.image,
+        // tag: session.user.tag,
+        text: input,
+        timestamp: serverTimestamp(),
+      });
+
+      const imageRef = ref(storage, `posts/${docRef.id}/image`);
+
+      if(selectedFile) {
+        await uploadString(imageRef, selectedFile, "data_url").then(async () => {
+          const downloadURL = await getDownloadURL(imageRef);
+          await updateDoc(doc(db,"posts", docRef.id), {
+            image: downloadURL,
+          });
+        })
+      }
+
+      setLoading(false);
+      setInput("");
+      setSelectedFile(null);
+      setShowEmojis(false);
+    };
+    // url image
+    const addImageToPost = (e) => {
+      const reader = new FileReader();
+      if (e.target.files[0]) {
+        reader.readAsDataURL(e.target.files[0]);
+      }
+      reader.onload = (readerEvent) => {
+        setSelectedFile(readerEvent.target.result);
+      };
+    };
 
 
     /* const emoji-mart */
