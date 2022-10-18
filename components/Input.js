@@ -1,11 +1,12 @@
 import React from 'react'
 import { useState, useRef } from 'react';
 import { CalendarIcon, ChartBarIcon, EmojiHappyIcon, PhotographIcon, XIcon } from '@heroicons/react/solid';
-import Picker from 'emoji-picker-react'; 
-import data from '@emoji-mart/data';
 import { addDoc, collection, doc, serverTimestamp, updateDoc } from 'firebase/firestore';
 import { db, storage } from "../firebase";
 import { getDownloadURL, ref, uploadString } from "@firebase/storage";
+
+import Picker from 'emoji-picker-react'; 
+import data from '@emoji-mart/data';
 
 
 function Input() {
@@ -45,12 +46,14 @@ function Input() {
       setSelectedFile(null);
       setShowEmojis(false);
     };
-    // url image
+
+    // url to display image
     const addImageToPost = (e) => {
       const reader = new FileReader();
       if (e.target.files[0]) {
         reader.readAsDataURL(e.target.files[0]);
       }
+
       reader.onload = (readerEvent) => {
         setSelectedFile(readerEvent.target.result);
       };
@@ -58,19 +61,19 @@ function Input() {
 
 
     /* const emoji-mart */
-    const addEmoji = (e) => {
+      const addEmoji = (e) => {
         let sym = e.unified.split("-");
         let codesArray = [];
         sym.forEach((el) => codesArray.push("0x" + el));
         let emoji = String.fromCodePoint(...codesArray);
-        setInput(input + emoji.native);
+        setInput(input + e.native)
       };
 
       
-
   return (
       <div 
-        className={`border-b border-gray-700 p-3 flex space-x-3`}
+        className={`border-b border-gray-700 p-3 flex space-x-3 overflow-y-hidden ${
+          loading && "opacity-60" }`}
       >
         <img src="https://twirpz.files.wordpress.com/2015/06/twitter-avi-gender-balanced-figure.png" 
         alt=""
@@ -93,7 +96,7 @@ function Input() {
                      hover:bg-[#272c26] bg-opacity-75 rounded-full flex
                      item-center justify-center top-1 left-1 
                      cursor-pointer" onClick={() => setSelectedFile(null)}>
-                         <XIcon className="text-white h-5"/>
+                         <XIcon className="text-white h-6 mt-1"/>
                      </div>
                      <img 
                      src={selectedFile} 
@@ -103,52 +106,54 @@ function Input() {
                  </div>
                 )}  
            </div>
+{!loading && (
+         <div className="flex items-center justify-between pt-2.5">
+         <div className="flex items-center">
+                 <div className="icon" onClick={() => filePickerRef.
+                     current.click()}>
+                     <PhotographIcon className="h-[22px] text-[#1d9bf0]"/>
+                     <input 
+                     type="file"
+                     hidden 
+                     onChange={addImageToPost} 
+                     ref={filePickerRef}
+                     />
+                 </div>
 
-             <div className="flex items-center justify-between pt-2.5">
-                <div className="flex items-center">
-                        <div className="icon" onClick={() => filePickerRef.
-                            current.click()}>
-                            <PhotographIcon className="h-[22px] text-[#1d9bf0]"/>
-                            <input 
-                            type="file"
-                            hidden 
-                            onChange={addImageToPost} 
-                            ref={filePickerRef}
-                            />
-                        </div>
+                    <div className="icon rotate-90">
+                     <ChartBarIcon className="h-[22px] text-[#1d9bf0]"/>
+                    </div>
 
-                           <div className="icon rotate-90">
-                            <ChartBarIcon className="h-[22px] text-[#1d9bf0]"/>
-                           </div>
+                    <div className="icon" onClick={() => setShowEmojis
+                     (!showEmojis)}>
+                     <EmojiHappyIcon className="h-[22px] text-[#1d9bf0]"/>
+                    </div>
 
-                           <div className="icon" onClick={() => setShowEmojis
-                            (!showEmojis)}>
-                            <EmojiHappyIcon className="h-[22px] text-[#1d9bf0]"/>
-                           </div>
+                    <div className="icon">
+                     <CalendarIcon className="h-[22px] text-[#1d9bf0]"/>
+                    </div>
 
-                           <div className="icon">
-                            <CalendarIcon className="h-[22px] text-[#1d9bf0]"/>
-                           </div>
-
-                     <div className="emojimart">   
-                        {showEmojis && (
-                            <Picker
-                            data={data}
-                            onEmojiSelect={addEmoji}
-                            theme="dark"
-                            />
-                        )}
-                    </div>  
-                </div>
-                 <button className="bg-[#1d9bf0] text-white rounded-full
-                 px-4 py-1.5 font-bold shadow-md hover:bg-[#1a8cd8]
-                 disabled:hover:bg-[#1d9bf0] disabled:opacity-50
-                 disabled:cursor-default" disabled={!input.trim() && !selectedFile}
-                 /* onClick={sendPost} */
-                 >
-                  Tweet
-                 </button>
-            </div>
+              <div className="emojimart">   
+                 {showEmojis && (
+                     <Picker
+                     data={data}
+                     onSelect={addEmoji}
+                     theme="dark"
+                     
+                     />
+                 )}
+             </div>  
+         </div>
+          <button className="bg-[#1d9bf0] text-white rounded-full
+          px-4 py-1.5 font-bold shadow-md hover:bg-[#1a8cd8]
+          disabled:hover:bg-[#1d9bf0] disabled:opacity-50
+          disabled:cursor-default" disabled={!input.trim() && !selectedFile}
+          onClick={sendPost} 
+          >
+           Tweet
+          </button>
+     </div>
+)}   
          </div>
     </div>
   )
