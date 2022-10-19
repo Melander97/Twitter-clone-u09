@@ -4,6 +4,7 @@ import styles from '../styles/Home.module.css'
 import Sidebar from '../components/Sidebar'
 import Feed from '../components/Feed'
 import Login from '../components/Login'
+// import { TwitterTimelineEmbed, TwitterShareButton, TwitterFollowButton, TwitterHashtagButton, TwitterMentionButton, TwitterTweetEmbed, TwitterMomentShare, TwitterDMButton, TwitterVideoEmbed, TwitterOnAirButton } from 'react-twitter-embed';
 
 import { getProviders, getSession, useSession } from "next-auth/react";
 
@@ -23,6 +24,7 @@ export default function Home({trendingResults, followResults, providers }) {
       <main className="bg-black min-h-screen flex max-w-[1500px] mx-auto">
          <Sidebar />      
          <Feed/>
+       
          {/* Widgets */}   
          
          {/* Modal */}   
@@ -31,11 +33,13 @@ export default function Home({trendingResults, followResults, providers }) {
   )
 }
 
+// Jsonkeeper doesnt work anymore
+
 export async function getServerSideProps(context) {
-  const trendingResults = await fetch("https://jsonkeeper.com/b/NKEV").then(
+  const trendingResults = await fetch("https://saurav.tech/NewsAPI/top-headlines/category/business/us.json").then(
     (res) => res.json()
   );
-  const followResults = await fetch("https://jsonkeeper.com/b/WWMJ").then(
+  const followResults = await fetch("https://randomuser.me/api/?results=30&inc=name,login,picture").then(
     (res) => res.json()
   );
   const providers = await getProviders();
