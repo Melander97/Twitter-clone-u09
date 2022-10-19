@@ -4,6 +4,7 @@ import { CalendarIcon, ChartBarIcon, EmojiHappyIcon, PhotographIcon, XIcon } fro
 import { addDoc, collection, doc, serverTimestamp, updateDoc } from 'firebase/firestore';
 import { db, storage } from "../firebase";
 import { getDownloadURL, ref, uploadString } from "@firebase/storage";
+import { useSession } from 'next-auth/react';
 
 import Picker from 'emoji-picker-react'; 
 import data from '@emoji-mart/data';
@@ -15,6 +16,7 @@ function Input() {
     const [showEmojis, setShowEmojis] = useState(false)
     const [loading, setLoading] = useState(false)
     const filePickerRef = useRef(null)
+    const { data: session } = useSession();
 
       // firebase configuration
     const sendPost = async () => {
@@ -22,10 +24,10 @@ function Input() {
       setLoading(true);
 
       const docRef = await addDoc(collection(db, 'posts'), {
-        // id: session.user.uid,
-        // username: session.user.name,
-        // userImg: session.user.image,
-        // tag: session.user.tag,
+        id: session.user.uid,
+        username: session.user.name,
+        userImg: session.user.image,
+        tag: session.user.tag,
         text: input,
         timestamp: serverTimestamp(),
       });
@@ -75,7 +77,7 @@ function Input() {
         className={`border-b border-gray-700 p-3 flex space-x-3 overflow-y-hidden ${
           loading && "opacity-60" }`}
       >
-        <img src="https://twirpz.files.wordpress.com/2015/06/twitter-avi-gender-balanced-figure.png" 
+        <img src={session.user.image} 
         alt=""
         className="h-11 w-11 rounded-full cursor-pointer"
          />
