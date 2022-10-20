@@ -7,11 +7,12 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import Moment from "react-moment";
 import { useRecoilState } from "recoil";
-// import { modalState, postIdState } from "../atoms/modalAtom";
+import { modalState, postIdState } from "../atoms/modalAtom";
 import { db } from "../firebase";
 
 function Post({ id, post, postPage }) {
   const { data: session } = useSession();
+  const [isOpen, setIsOpen] = useRecoilState(modalState)
 
   return (
     <div className="p-3 flex cursor-pointer border-b border-gray-700">
