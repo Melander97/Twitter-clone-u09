@@ -4,6 +4,7 @@ import styles from '../styles/Home.module.css'
 import Sidebar from '../components/Sidebar'
 import Feed from '../components/Feed'
 import Login from '../components/Login'
+import Modal from '../components/Modal'
 // import { TwitterTimelineEmbed, TwitterShareButton, TwitterFollowButton, TwitterHashtagButton, TwitterMentionButton, TwitterTweetEmbed, TwitterMomentShare, TwitterDMButton, TwitterVideoEmbed, TwitterOnAirButton } from 'react-twitter-embed';
 
 import { getProviders, getSession, useSession } from "next-auth/react";
@@ -27,7 +28,7 @@ export default function Home({trendingResults, followResults, providers }) {
        
          {/* Widgets */}   
          
-         {/* Modal */}   
+        <Modal/>
       </main>
     </div>
   )
