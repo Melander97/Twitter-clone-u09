@@ -19,6 +19,16 @@ function Post({ id, post, postPage }) {
   const [liked, setLiked] = useState(false);
   const router = useRouter()
 
+  useEffect(() =>
+      onSnapshot(
+        query(collection(db, "posts", id, "comments"), orderBy
+        ("timestamp", "desc")),
+        (snapshot) => 
+          setComments(snapshot.docs)
+      ),
+    [db, id]
+  );
+
   useEffect(() => 
   onSnapshot(collection(db, "posts", id, "likes"), (snapshot) =>
     setLikes(snapshot.docs)
@@ -44,7 +54,8 @@ function Post({ id, post, postPage }) {
   return (
     <div 
          className="p-3 flex cursor-pointer border-b border-gray-700"
-         onClick={() => router.push(`/${id}`)}>
+         onClick={() => router.push(`/${id}`)}
+         >
         {!postPage && (
             <img 
             src={post?.userImg} 
