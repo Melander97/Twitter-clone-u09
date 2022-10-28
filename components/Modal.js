@@ -21,8 +21,8 @@ function Modal() {
 
   useEffect(
     () => { console.log(db, postId)
-      const grillkorv = doc(db, "posts", postId +"")
-      onSnapshot(grillkorv, (snapshot) => {
+      const hotdog = doc(db, "posts", postId +"")
+      onSnapshot(hotdog, (snapshot) => {
         setPost(snapshot.data());
       })}, 
     [db]
