@@ -8,6 +8,7 @@ import Modal from '../components/Modal'
 import { useRecoilState } from 'recoil'
 import { modalState } from '../atoms/modalAtom'
 
+
 // import { TwitterTimelineEmbed, TwitterShareButton, TwitterFollowButton, TwitterHashtagButton, TwitterMentionButton, TwitterTweetEmbed, TwitterMomentShare, TwitterDMButton, TwitterVideoEmbed, TwitterOnAirButton } from 'react-twitter-embed';
 
 import { getProviders, getSession, useSession } from "next-auth/react";
@@ -29,7 +30,6 @@ export default function Home({trendingResults, followResults, providers }) {
       <main className="bg-black min-h-screen flex max-w-[1500px] mx-auto">
          <Sidebar />      
          <Feed/>
-         {/* Widgets */}   
 
    {isOpen && <Modal />}      
         <Modal/>
