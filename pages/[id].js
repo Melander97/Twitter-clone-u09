@@ -15,6 +15,7 @@ import {collection, doc, onSnapshot, orderBy, query,
   import Login from '../components/Login';
   import Feed from '../components/Feed';
   import Comment from "../components/Comment"
+import Widgets from '../components/Widgets';
  
   
 
@@ -75,7 +76,8 @@ function PostPage({ trendingResults, followResults, providers }) {
               ))}
             </div>
           )}
-       </div>   
+       </div>  
+       <Widgets/> 
 
  {isOpen && <Modal />}      
       <Modal/>
