@@ -14,7 +14,6 @@ function Login({providers}) {
         <div>
           {Object.values(providers).map(provider => (
             <div key={provider.name}>
-                {/* tailwind button  */}
                 <button
               className="relative inline-flex items-center justify-start px-6 py-3 overflow-hidden
                font-medium transition-all bg-white rounded hover:bg-white group"
